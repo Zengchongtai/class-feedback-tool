@@ -1,10 +1,7 @@
 {
   "functions": {
-    "api/submit.py": {
-      "runtime": "python@3.9"
-    },
-    "api/resources.py": {
-      "runtime": "python@3.9"
+    "api/**/*.py": {
+      "runtime": "vercel-python@5.2.2"
     }
   },
   "routes": [
