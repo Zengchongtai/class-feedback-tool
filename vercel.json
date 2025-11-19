@@ -1,10 +1,10 @@
 {
   "functions": {
     "api/submit.py": {
-      "runtime": "python3.9"
+      "runtime": "python@3.9"
     },
     "api/resources.py": {
-      "runtime": "python3.9"
+      "runtime": "python@3.9"
     }
   },
   "routes": [
