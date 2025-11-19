@@ -4,7 +4,338 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>班级工具箱 - 灵感反馈 & 资源中心</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 基础样式 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        /* 选项卡样式 */
+        .tabs {
+            display: flex;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .tab-button {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 16px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .tab-button.active {
+            background: white;
+            color: #4f46e5;
+            border-bottom: 3px solid #4f46e5;
+        }
+
+        .tab-button:hover:not(.active) {
+            background: #f1f5f9;
+        }
+
+        /* 内容区域样式 */
+        .tab-content {
+            display: none;
+            padding: 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            padding: 30px;
+        }
+
+        .card h2 {
+            color: #1e293b;
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+
+        .card > p {
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.9em;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        /* 按钮样式 */
+        .submit-button {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 消息样式 */
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        #successMessage {
+            background-color: #f0f9ff;
+            color: #0369a1;
+            border: 1px solid #bae6fd;
+        }
+
+        #errorMessage {
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        /* 资源中心样式 */
+        .resource-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .search-input, .filter-select {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus, .filter-select:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        /* 资源列表样式 */
+        .resource-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid #4f46e5;
+            transition: all 0.3s;
+        }
+
+        .resource-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .resource-icon {
+            font-size: 2em;
+            margin-right: 15px;
+        }
+
+        .resource-content {
+            flex: 1;
+        }
+
+        .resource-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .resource-description {
+            color: #64748b;
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+
+        .resource-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85em;
+            color: #94a3b8;
+        }
+
+        .resource-category {
+            background: #e0e7ff;
+            color: #4f46e5;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .resource-action {
+            margin-left: 15px;
+        }
+
+        .download-button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+
+        .download-button:hover {
+            background: #4338ca;
+        }
+
+        .resource-footer {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .resource-footer a {
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .resource-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 12px;
+            }
+            
+            .resource-controls {
+                flex-direction: column;
+            }
+            
+            .resource-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .resource-action {
+                margin-left: 0;
+                margin-top: 15px;
+                align-self: flex-end;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -70,7 +401,6 @@
                 </div>
                 
                 <div id="resourceList" class="resource-list">
-                    <!-- 资源列表将通过JavaScript动态加载 -->
                     <div class="loading">正在加载资源...</div>
                 </div>
                 
@@ -81,7 +411,257 @@
         </div>
     </div>
 
-    <!-- 其他HTML内容 -->
-    <script src="script.js"></script>
+    <script>
+        // 页面加载完成后初始化所有功能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成，开始初始化...');
+            
+            // 初始化选项卡
+            initTabs();
+            
+            // 初始化反馈表单
+            initFeedbackForm();
+            
+            // 初始化资源中心
+            initResourceCenter();
+            
+            // 初始化资源申请功能
+            initResourceRequest();
+            
+            // 确保消息初始隐藏
+            hideAllMessages();
+        });
+
+        // 选项卡功能
+        function initTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有按钮和内容的active类
+                    document.querySelectorAll('.tab-button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // 添加active类到当前按钮和内容
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        // 反馈表单功能
+        function initFeedbackForm() {
+            const form = document.getElementById('feedbackForm');
+            const textarea = document.getElementById('ideaContent');
+            const charCount = document.getElementById('charCount');
+            const submitBtn = document.getElementById('submitBtn');
+            const buttonText = submitBtn.querySelector('.button-text');
+            const loadingSpinner = submitBtn.querySelector('.loading-spinner');
+            
+            // 字符计数
+            textarea.addEventListener('input', function() {
+                const count = this.value.length;
+                charCount.textContent = count;
+                
+                if (count > 900) {
+                    charCount.style.color = '#ef4444';
+                } else if (count > 700) {
+                    charCount.style.color = '#f59e0b';
+                } else {
+                    charCount.style.color = '#6b7280';
+                }
+            });
+            
+            // 表单提交
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                const content = textarea.value.trim();
+                
+                // 简单验证
+                if (!content) {
+                    alert('请先填写一些内容再提交哦！');
+                    return;
+                }
+                
+                // 显示加载状态
+                buttonText.textContent = '提交中...';
+                loadingSpinner.style.display = 'inline';
+                submitBtn.disabled = true;
+                
+                // 隐藏之前的消息
+                hideAllMessages();
+                
+                try {
+                    const response = await fetch('/api/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            content: content,
+                            type: 'feedback'
+                        })
+                    });
+
+                    if (response.ok) {
+                        showMessage('successMessage');
+                        textarea.value = '';
+                        charCount.textContent = '0';
+                        charCount.style.color = '#6b7280';
+                    } else {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || '提交失败');
+                    }
+                } catch (error) {
+                    console.error('提交出错:', error);
+                    showMessage('errorMessage');
+                } finally {
+                    // 恢复按钮状态
+                    buttonText.textContent = '提交灵感';
+                    loadingSpinner.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
+            });
+        }
+
+        // 资源中心功能
+        function initResourceCenter() {
+            const searchInput = document.getElementById('resourceSearch');
+            const categoryFilter = document.getElementById('categoryFilter');
+            
+            // 加载资源列表
+            loadResources();
+            
+            // 搜索功能
+            searchInput.addEventListener('input', filterResources);
+            
+            // 分类筛选
+            categoryFilter.addEventListener('change', filterResources);
+        }
+
+        // 加载资源列表
+        async function loadResources() {
+            const resourceList = document.getElementById('resourceList');
+            
+            try {
+                // 尝试从API获取资源
+                const response = await fetch('/api/resources');
+                let resources = [];
+                
+                if (response.ok) {
+                    resources = await response.json();
+                } else {
+                    // 如果API不可用，尝试从本地JSON文件加载
+                    const localResponse = await fetch('/data/resources.json');
+                    if (localResponse.ok) {
+                        resources = await localResponse.json();
+                    } else {
+                        throw new Error('无法加载资源列表');
+                    }
+                }
+                
+                displayResources(resources);
+                
+            } catch (error) {
+                console.error('加载资源失败:', error);
+                resourceList.innerHTML = `
+                    <div class="message">
+                        <p>❌ 资源加载失败，请刷新页面重试</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 显示资源列表
+        function displayResources(resources) {
+            const resourceList = document.getElementById('resourceList');
+            
+            if (resources.length === 0) {
+                resourceList.innerHTML = `
+                    <div class="message">
+                        <p>暂无资源，请稍后再来</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            resourceList.innerHTML = resources.map(resource => `
+                <div class="resource-item" data-category="${resource.category}" data-title="${resource.title.toLowerCase()}">
+                    <div class="resource-icon">${resource.icon || '📄'}</div>
+                    <div class="resource-content">
+                        <div class="resource-title">${resource.title}</div>
+                        <div class="resource-description">${resource.description}</div>
+                        <div class="resource-meta">
+                            <span class="resource-category">${resource.category}</span>
+                            <span class="resource-size">${resource.fileSize}</span>
+                        </div>
+                    </div>
+                    <div class="resource-action">
+                        <a href="${resource.link}" target="_blank" class="download-button">下载</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 筛选资源
+        function filterResources() {
+            const searchTerm = document.getElementById('resourceSearch').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const resources = document.querySelectorAll('.resource-item');
+            
+            resources.forEach(resource => {
+                const title = resource.getAttribute('data-title');
+                const resourceCategory = resource.getAttribute('data-category');
+                
+                const matchesSearch = title.includes(searchTerm);
+                const matchesCategory = !category || resourceCategory === category;
+                
+                if (matchesSearch && matchesCategory) {
+                    resource.style.display = 'flex';
+                } else {
+                    resource.style.display = 'none';
+                }
+            });
+        }
+
+        // 资源申请功能
+        function initResourceRequest() {
+            const requestLink = document.getElementById('requestResource');
+            
+            requestLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const resourceName = prompt('请输入你需要的资源名称：');
+                if (resourceName) {
+                    // 切换到反馈选项卡并预填内容
+                    document.querySelector('[data-tab="feedback"]').click();
+                    document.getElementById('ideaContent').value = `资源申请：${resourceName}\n\n申请理由：`;
+                    document.getElementById('ideaContent').focus();
+                    
+                    // 滚动到文本框
+                    document.getElementById('ideaContent').scrollIntoView({ 
+                        behavior: 'smooth' 
+                    });
+                }
+            });
+        }
+
+        // 工具函数
+        function hideAllMessages() {
+            document.getElementById('successMessage').classList.add('hidden');
+            document.getElementById('errorMessage').classList.add('hidden');
+        }
+
+        function showMessage(messageId) {
+            hideAllMessages();
+            document.getElementById(messageId).classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
