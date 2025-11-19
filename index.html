@@ -509,15 +509,25 @@
                         })
                     });
 
-                    if (response.ok) {
-                        showMessage('successMessage');
-                        textarea.value = '';
-                        charCount.textContent = '0';
-                        charCount.style.color = '#6b7280';
-                    } else {
-                        const errorData = await response.json();
-                        throw new Error(errorData.error || '提交失败');
-                    }
+                            if (response.ok) {
+                                const result = await response.json();
+                                
+                                if (result.email_sent) {
+                                    showMessage('successMessage');
+                                } else {
+                                    // 邮件发送失败，但仍显示成功，只是提示不同
+                                    const successElement = document.getElementById('successMessage');
+                                    successElement.innerHTML = `<p><strong>✅ 提交成功！</strong><br>感谢您的贡献！<br><small>（邮件通知暂时无法发送，我们会通过其他方式查看）</small></p>`;
+                                    showMessage('successMessage');
+                                }
+                                
+                                textarea.value = '';
+                                charCount.textContent = '0';
+                                charCount.style.color = '#6b7280';
+                            } else {
+                                const errorData = await response.json();
+                                throw new Error(errorData.error || '提交失败');
+                            }
                 } catch (error) {
                     console.error('提交出错:', error);
                     showMessage('errorMessage');
