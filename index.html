@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>班级工具箱 - 灵感反馈 & 资源中心</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏫 班级工具箱</h1>
+            <p>为同学们提供灵感反馈和资源分享的一站式服务</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" data-tab="feedback">💡 灵感这里说</button>
+            <button class="tab-button" data-tab="resources">📚 资源中心</button>
+        </div>
+
+        <!-- 灵感反馈选项卡 -->
+        <div id="feedback" class="tab-content active">
+            <div class="card">
+                <h2>分享你的好点子</h2>
+                <p>关于班级建设、活动策划、公众号运营...任何想法都欢迎提出！</p>
+                
+                <form id="feedbackForm">
+                    <div class="form-group">
+                        <label for="ideaContent">你的灵感：</label>
+                        <textarea 
+                            id="ideaContent"
+                            placeholder="请详细描述你的想法，比如：我们可以组织一次线上编程比赛，或者公众号可以新增一个技术分享栏目..."
+                            maxlength="1000" 
+                            required
+                        ></textarea>
+                        <div class="char-count"><span id="charCount">0</span>/1000</div>
+                    </div>
+                    
+                    <button type="submit" id="submitBtn" class="submit-button">
+                        <span class="button-text">提交灵感</span>
+                        <span class="loading-spinner" style="display: none;">⏳</span>
+                    </button>
+                </form>
+                
+                <div id="successMessage" class="message hidden">
+                    <p><strong>✅ 提交成功！</strong><br>感谢你的贡献，我们已收到你的灵感。</p>
+                </div>
+                
+                <div id="errorMessage" class="message hidden">
+                    <p><strong>❌ 提交失败</strong><br>请稍后重试，或直接联系公众号管理员。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 资源中心选项卡 -->
+        <div id="resources" class="tab-content">
+            <div class="card">
+                <h2>学习资源下载</h2>
+                <p>这里收集了各类学习软件、工具和资料，持续更新中...</p>
+                
+                <div class="resource-controls">
+                    <input type="text" id="resourceSearch" placeholder="搜索资源..." class="search-input">
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="">全部分类</option>
+                        <option value="开发工具">开发工具</option>
+                        <option value="编程语言">编程语言</option>
+                        <option value="设计工具">设计工具</option>
+                        <option value="学习资料">学习资料</option>
+                    </select>
+                </div>
+                
+                <div id="resourceList" class="resource-list">
+                    <!-- 资源列表将通过JavaScript动态加载 -->
+                    <div class="loading">正在加载资源...</div>
+                </div>
+                
+                <div class="resource-footer">
+                    <p>需要特定资源？<a href="#" id="requestResource">点此申请</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 其他HTML内容 -->
+    <script src="script.js"></script>
+</body>
+</html>

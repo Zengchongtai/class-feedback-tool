@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "VS Code 编辑器",
+    "description": "轻量级但功能强大的源代码编辑器",
+    "category": "开发工具",
+    "fileSize": "85MB",
+    "link": "https://code.visualstudio.com/download",
+    "icon": "💻"
+  },
+  {
+    "id": 2,
+    "title": "Python 3.11 安装包",
+    "description": "Python 编程语言最新版本",
+    "category": "编程语言",
+    "fileSize": "25MB",
+    "link": "https://www.python.org/ftp/python/3.11.0/python-3.11.0-amd64.exe",
+    "icon": "🐍"
+  },
+  {
+    "id": 3,
+    "title": "Git 版本控制工具",
+    "description": "分布式版本控制系统",
+    "category": "开发工具",
+    "fileSize": "45MB",
+    "link": "https://git-scm.com/download/win",
+    "icon": "📚"
+  },
+  {
+    "id": 4,
+    "title": "PS 2024 安装包",
+    "description": "图像处理软件 Photoshop",
+    "category": "设计工具",
+    "fileSize": "2.5GB",
+    "link": "https://example.com/ps2024.zip",
+    "icon": "🎨"
+  }
+]
