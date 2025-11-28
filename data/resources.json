@@ -1,23 +1,30 @@
 [
   {
-    "title": "VS Code",
-    "type": "software",
-    "desc": "最好用的代码编辑器，前端开发必备。",
-    "icon": "💻",
-    "link": "https://code.visualstudio.com/"
-  },
-  {
-    "title": "Github",
+    "title": "FC8 软件库",
     "type": "website",
-    "desc": "全球最大的代码托管平台。",
-    "icon": "🌐",
-    "link": "https://github.com/"
+    "desc": "设计相关软件下载站，资源非常丰富。由我们年级长提供～",
+    "icon": "💻",
+    "link": "https://fc8.top/index.html"
   },
   {
-    "title": "期末复习资料包",
+    "title": "工业设计相关软件列表",
+    "type": "website",
+    "desc": "袁院长给大家整理的一些工业设计必备软件清单，大家可以提前自主学习熟悉。Solidworks 建模软件暂未在列表中～",
+    "icon": "🌐",
+    "link": "https://docs.qq.com/sheet/DUENPVFR5aFVaQnpi?tab=BB08J2"
+  },
+  {
+    "title": "菜鸟教程",
+    "type": "website",
+    "desc": "编程的百科全书！忘了关键字，不懂函数的作用……这里都有",
+    "icon": "🌐",
+    "link": "https://www.runoob.com/"
+  },
+  {
+    "title": "课程培养方案",
     "type": "doc",
-    "desc": "包含高数、大物历年真题 PDF。",
+    "desc": "最新的湖南大学工业设计课程培养方案",
     "icon": "📄",
-    "link": "https://pan.baidu.com/"
+    "link": "https://pan.baidu.com/s/1hdaBEuqNJbZH_2sezdDvUQ?pwd=nmuv"
   }
 ]
