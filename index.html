@@ -609,12 +609,52 @@
         }
 
         // 💡 5. 反馈
+        // 💡 5. 灵感反馈 (真·联网版)
         function initFeedback() {
             const btn = document.getElementById('submitBtn');
-            document.getElementById('feedbackForm').addEventListener('submit', (e) => {
+            const form = document.getElementById('feedbackForm');
+            const textarea = document.getElementById('ideaContent');
+
+            form.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                
+                const content = textarea.value.trim();
+                if (!content) return;
+
+                // 1. 改变按钮状态，防止重复点击
+                const originalText = btn.innerText;
                 btn.innerText = "🚀 发送中...";
-                setTimeout(() => { alert("发送成功！"); btn.innerText = "✨ 发送灵感"; document.getElementById('ideaContent').value=''; }, 800);
+                btn.disabled = true;
+
+                try {
+                    // 2. 真正的向后台发送请求
+                    const response = await fetch('/api/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            content: content,
+                            type: 'feedback'
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        // 3. 成功逻辑
+                        alert("🎉 " + (result.message || "发送成功！"));
+                        textarea.value = ''; // 清空输入框
+                    } else {
+                        // 4. 失败逻辑 (显示后台返回的错误)
+                        throw new Error(result.error || "提交失败");
+                    }
+                } catch (error) {
+                    console.error("提交出错:", error);
+                    alert("💨 发送失败: " + error.message);
+                } finally {
+                    // 5. 恢复按钮状态
+                    btn.innerText = "✨ 发送灵感";
+                    btn.disabled = false;
+                }
             });
         }
     </script>
