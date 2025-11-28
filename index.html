@@ -252,15 +252,119 @@
         .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4); }
 
         /* 移动端适配 */
+        /* ============================
+           📱 移动端专属样式 (App 风格)
+           ============================ */
         @media (max-width: 768px) {
-            body { align-items: flex-start; height: auto; padding: 10px; overflow-y: auto; }
-            .app-window { flex-direction: column; width: 100%; height: auto; min-height: 90vh; }
-            .sidebar { width: 100%; padding: 20px; border-right: none; border-bottom: var(--glass-border); }
-            .nav-menu { flex-direction: row; overflow-x: auto; }
-            .nav-item { white-space: nowrap; padding: 10px 15px; }
-            .content-area { padding: 25px 20px; }
-            .timeline-container { padding-left: 20px; } 
-            .portal-grid { grid-template-columns: repeat(2, 1fr); }
+            /* 1. 重置基础布局：去除窗口感，改为全屏流式 */
+            body { 
+                align-items: flex-start; 
+                height: auto; 
+                overflow-y: auto; 
+                background: #f8fafc; /* 手机端使用实色背景防止过卡 */
+            }
+            
+            .app-window { 
+                flex-direction: column; 
+                width: 100%; 
+                height: auto; 
+                min-height: 100vh;
+                border: none; 
+                border-radius: 0;
+                background: transparent;
+                box-shadow: none;
+                overflow: visible;
+            }
+
+            /* 2. 把侧边栏变成【底部导航栏】 */
+            .sidebar { 
+                position: fixed; 
+                bottom: 0; left: 0; right: 0;
+                width: 100%; 
+                height: auto;
+                padding: 8px 10px; 
+                padding-bottom: env(safe-area-inset-bottom, 20px); /* 适配全面屏底部黑条 */
+                background: rgba(255, 255, 255, 0.95); /* 不透明度高一点，防止看不清 */
+                backdrop-filter: blur(20px);
+                border-right: none; 
+                border-top: 1px solid rgba(0,0,0,0.08);
+                z-index: 1000; /* 保证在最上层 */
+                flex-direction: row;
+                justify-content: center;
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.03);
+            }
+
+            /* 隐藏手机端侧边栏的大标题，节省空间 */
+            .app-brand { display: none; }
+
+            /* 调整导航菜单布局 */
+            .nav-menu { 
+                flex-direction: row; 
+                width: 100%; 
+                justify-content: space-around; /* 均匀分布 */
+                gap: 0;
+            }
+
+            /* 导航按钮样式：图标在上，文字在下 */
+            .nav-item { 
+                flex-direction: column; 
+                justify-content: center;
+                padding: 6px; 
+                border-radius: 8px;
+                font-size: 0.7rem; /* 文字改小 */
+                gap: 4px;
+                white-space: nowrap;
+                color: #94a3b8;
+            }
+            
+            .nav-item.active { 
+                background: transparent; 
+                color: var(--primary-color); 
+                box-shadow: none;
+                transform: none; /* 移除位移 */
+            }
+            
+            .nav-icon { 
+                margin-right: 0; 
+                font-size: 1.4rem; /* 图标放大 */
+                margin-bottom: 2px;
+            }
+
+            /* 3. 内容区域适配 */
+            .content-area { 
+                padding: 20px 16px; 
+                padding-bottom: 100px; /* 底部留出空间给导航栏，防止遮挡 */
+                width: 100%;
+            }
+
+            /* 标题调整 */
+            .section-header h2 { font-size: 1.6rem; }
+            
+            /* 搜索栏和筛选栏变成垂直排列 */
+            .toolbar { flex-direction: column; gap: 10px; }
+            .search-box, .filter-select { width: 100%; flex: none; }
+
+            /* 4. 卡片布局调整：变成单列 */
+            .vote-grid, .resource-grid { 
+                grid-template-columns: 1fr; /* 强制一列 */
+            }
+            
+            /* 传送门保持两列，比较好看 */
+            .portal-grid { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
+
+            /* 5. 时间轴样式微调 */
+            .timeline-container { padding-left: 25px; }
+            .timeline-item { padding: 15px; margin-bottom: 20px; }
+            /* 调整圆点位置 */
+            .timeline-dot { 
+                left: -32px; 
+                width: 16px; height: 16px; 
+                top: 22px; 
+                border-width: 3px; 
+                box-shadow: none;
+            }
         }
     </style>
 </head>
@@ -552,7 +656,7 @@
         
 
         // 📚 4. 加载资源
-        // 📚 4. 加载资源 (已修复链接读取问题)
+        // 📚 4. 加载资源 (修复分类失效 Bug 版)
         async function loadResources() {
             try {
                 const response = await fetch('/data/resources.json');
@@ -563,48 +667,59 @@
                 resources = [];
             }
 
-            const container = document.getElementById('resourceGrid');
-            const searchIn = document.getElementById('resSearch');
-            const catIn = document.getElementById('resCategory');
+            // 获取当前页面上的元素
+            const oldSearch = document.getElementById('resSearch');
+            const oldCat = document.getElementById('resCategory');
 
+            // --- 关键修复：克隆节点以清除旧的监听器 ---
+            const newSearch = oldSearch.cloneNode(true);
+            const newCat = oldCat.cloneNode(true);
+
+            // 用新的替换旧的
+            oldSearch.parentNode.replaceChild(newSearch, oldSearch);
+            oldCat.parentNode.replaceChild(newCat, oldCat);
+
+            // --- 渲染逻辑 ---
             const render = () => {
-                const term = searchIn.value.toLowerCase();
-                const cat = catIn.value;
-                
-                const filtered = resources.filter(r => 
-                    (cat === 'all' || r.type === cat) && 
-                    r.title.toLowerCase().includes(term)
-                );
+                // 必须读取【新节点】的值
+                const term = newSearch.value.toLowerCase();
+                const cat = newCat.value; 
 
+                const filtered = resources.filter(r => {
+                    // 1. 搜索匹配 (标题或描述)
+                    const matchSearch = r.title.toLowerCase().includes(term) || 
+                                      (r.desc || '').toLowerCase().includes(term);
+                    
+                    // 2. 分类匹配 (兼容 type 和 category 两种写法)
+                    // JSON里可能是 "type": "software" 也可能是 "category": "software"
+                    const rType = (r.type || r.category || 'other').toLowerCase();
+                    const matchCat = (cat === 'all') || (rType === cat);
+
+                    return matchSearch && matchCat;
+                });
+
+                const container = document.getElementById('resourceGrid');
+                
                 if (filtered.length === 0) {
-                    container.innerHTML = '<div style="text-align:center; color:#999; width:100%;">暂无匹配资源</div>';
+                    container.innerHTML = '<div style="text-align:center; color:#94a3b8; width:100%; padding:20px;">📦 暂无匹配资源</div>';
                     return;
                 }
 
-                // 注意这里：href="${r.link}"
                 container.innerHTML = filtered.map(r => `
                     <div class="resource-card">
-                        <div class="res-icon">${r.icon}</div>
+                        <div class="res-icon">${r.icon || '📄'}</div>
                         <div class="res-title">${r.title}</div>
-                        <div class="res-desc">${r.desc}</div>
-                        <a href="${r.link}" target="_blank" class="res-btn">获取资源</a>
+                        <div class="res-desc">${r.desc || '暂无描述'}</div>
+                        <a href="${r.link || '#'}" target="_blank" class="res-btn">获取资源</a>
                     </div>
                 `).join('');
             };
 
-            // 移除旧监听器防止重复绑定 (Clone Node 技巧)
-            const newSearchIn = searchIn.cloneNode(true);
-            const newCatIn = catIn.cloneNode(true);
-            searchIn.parentNode.replaceChild(newSearchIn, searchIn);
-            catIn.parentNode.replaceChild(newCatIn, catIn);
+            // 绑定事件到【新节点】
+            newSearch.addEventListener('input', render);
+            newCat.addEventListener('change', render);
 
-            newSearchIn.addEventListener('input', render);
-            newCatIn.addEventListener('change', render);
-            
-            // 确保这些变量指向新的 DOM 元素
-            newSearchIn.value = searchIn.value; 
-            newCatIn.value = catIn.value;
-
+            // 初始化渲染
             render();
         }
 
