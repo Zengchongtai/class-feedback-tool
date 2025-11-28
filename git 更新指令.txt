@@ -1,0 +1,6 @@
+# 编辑文件后
+git add data/resources.json
+git commit -m "feat: 添加新资源 - 资源名称"
+git push origin main
+
+记得重新上传try.env文件
